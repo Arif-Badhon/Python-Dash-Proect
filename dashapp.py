@@ -32,10 +32,29 @@ app.layout= html.Div([
             Economic Dashboard, Business Dashboard & Industry Dashboard \
             You will get one of the most comprehensive data warehouse here", style={'font-size': 25, 'textAlign':'center'})
      ]),
+     html.Br(),
+     html.Br(),
      html.Div([
         html.Div([
-            html.H3("Economic Dashboard", style={'font-size': 30, 'textAlign': 'left'}, className="six columns")
-        ])
+            html.H3("Economic Dashboard", style={'font-size': 25, 'textAlign': 'left'}, className="five columns"),
+            dcc.Graph(id="Economic Graph", className="seven columns")
+        ], className='row')
+     ]),
+     html.Br(),
+     html.Br(),
+     html.Div([
+        html.Div([
+            html.H3("Business Dashboard", style={'font-size': 25, 'textAlign': 'left'}, className="five columns"),
+            dcc.Graph(id="Business Graph", className="seven columns")
+        ], className='row')
+     ]),
+     html.Br(),
+     html.Br(),
+     html.Div([
+        html.Div([
+            html.H3("Industry Dashboard", style={'font-size': 25, 'textAlign': 'left'}, className="five columns"),
+            dcc.Graph(id="Industry Graph", className="seven columns")
+        ], className='row')
      ])
 
     ])

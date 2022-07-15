@@ -30,7 +30,12 @@ app.layout= html.Div([
      html.Div([
         html.P("Our Data Terminal is consists of 3 Dashboards which are: \
             Economic Dashboard, Business Dashboard & Industry Dashboard \
-            ")
+            You will get one of the most comprehensive data warehouse here", style={'font-size': 25, 'textAlign':'center'})
+     ]),
+     html.Div([
+        html.Div([
+            html.H3("Economic Dashboard", style={'font-size': 30, 'textAlign': 'left'}, className="six columns")
+        ])
      ])
 
     ])

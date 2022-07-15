@@ -138,8 +138,9 @@
     line-height: 1.6;
     font-weight: 400;
     font-family: "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    background-color: rgb(57, 56, 56);
-    color: white;
+    background-color: white;
+    color: black;
+    margin: 0;
  }
   
   

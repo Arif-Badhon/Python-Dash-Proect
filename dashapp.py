@@ -36,7 +36,10 @@ app.layout= html.Div([
      html.Br(),
      html.Div([
         html.Div([
-            html.H3("Economic Dashboard", style={'font-size': 25, 'textAlign': 'left'}, className="five columns"),
+            html.Div([
+                html.H3("  Economic Dashboard", style={'font-size': 25, 'textAlign': 'left'}),
+                html.H5("  Here you can select any Indicator to see the analysis")
+            ], className = "five columns"),
             dcc.Graph(id="Economic Graph", className="seven columns")
         ], className='row')
      ]),
@@ -44,7 +47,7 @@ app.layout= html.Div([
      html.Br(),
      html.Div([
         html.Div([
-            html.H3("Business Dashboard", style={'font-size': 25, 'textAlign': 'left'}, className="five columns"),
+            html.H3("  Business Dashboard", style={'font-size': 25, 'textAlign': 'left'}, className="five columns"),
             dcc.Graph(id="Business Graph", className="seven columns")
         ], className='row')
      ]),
@@ -52,7 +55,7 @@ app.layout= html.Div([
      html.Br(),
      html.Div([
         html.Div([
-            html.H3("Industry Dashboard", style={'font-size': 25, 'textAlign': 'left'}, className="five columns"),
+            html.H3("  Industry Dashboard", style={'font-size': 25, 'textAlign': 'left'}, className="five columns"),
             dcc.Graph(id="Industry Graph", className="seven columns")
         ], className='row')
      ])

@@ -1,4 +1,3 @@
-from ast import IsNot
 from dash import dash, dcc, html
 from database import user_collection, economic_collection, \
     business_collection, industry_collection

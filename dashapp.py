@@ -86,8 +86,21 @@ app.layout= html.Div([
      html.Br(),
      html.Div([
         html.Div([
-            html.H3("  Industry Dashboard", style={'font-size': 25, 'textAlign': 'left'}, className="five columns"),
-            dcc.Graph(id="Industry Graph", className="seven columns")
+            html.Div([
+                html.H3("Industry Dashboard", style={'font-size': 25, 'textAlign': 'left'}),
+                html.H5("Please Select all to get the graph"),
+                html.H5("Select Sector"),
+                dcc.Dropdown(id="Industry_Sector", options=[{'label': i, 'value': i} for i in industry_collection], value='Select'),
+                html.H5("Select Indicator"),
+                dcc.Dropdown(id="Indistry_Indicator")
+            ], className='four columns'),
+            html.Div([
+                dcc.Tabs([
+                    dcc.Tab(label='Yearly', children=[dcc.Graph(id="Industry_Graph", figure = {}, config={"displaylogo": False, 'modeBarButtonsToRemove':['toImage', 'pan2d', 'select2d', 'lasso2d']})]),
+                    dcc.Tab(label='Budget Yearly', children=[dcc.Graph(id="Industry_Graph1", figure = {}, config={"displaylogo": False, 'modeBarButtonsToRemove':['toImage', 'pan2d', 'select2d', 'lasso2d']})]),
+                    dcc.Tab(label='Monthly', children=[dcc.Graph(id="Industry_Graph2", figure = {}, config={"displaylogo": False, 'modeBarButtonsToRemove':['toImage', 'pan2d', 'select2d', 'lasso2d']})])
+                ])
+            ], className='eight columns')
         ], className='row')
      ])
 
@@ -109,7 +122,7 @@ def update_yearly_Economic_graph(Economic_Indicator):
             yaxis = { "visible": False },
             annotations = [
                 {   
-                    "text": "Please select an Indicator where yearly data is available",
+                    "text": "Please select the relevant Timeline",
                     "xref": "paper",
                     "yref": "paper",
                     "showarrow": False,
@@ -143,7 +156,7 @@ def update_budget_yearly_graph(Economic_Indicator):
             yaxis = { "visible": False },
             annotations = [
                 {   
-                    "text": "Please select an Indicator where Budget Yearly data is available",
+                    "text": "Please select the relevant Timeline",
                     "xref": "paper",
                     "yref": "paper",
                     "showarrow": False,
@@ -176,7 +189,7 @@ def update_monthly_graph(Economic_Indicator):
             yaxis = { "visible": False },
             annotations = [
                 {   
-                    "text": "Please select an Indicator where Monthly data is available",
+                    "text": "Please select the relevant Timeline",
                     "xref": "paper",
                     "yref": "paper",
                     "showarrow": False,
@@ -263,7 +276,7 @@ def business_graph(Business_Sector, Business_Company, Business_Indicator):
             yaxis = { "visible": False },
             annotations = [
                 {   
-                    "text": "Please select an Indicator where yearly data is available",
+                    "text": "Please select the relevant Timeline",
                     "xref": "paper",
                     "yref": "paper",
                     "showarrow": False,
@@ -303,7 +316,7 @@ def business_graph1(Business_Sector, Business_Company, Business_Indicator):
                 yaxis = { "visible": False },
                 annotations = [
                     {   
-                        "text": "Please select an Indicator where Budget Yearly data is available",
+                        "text": "Please select the relevant Timeline",
                         "xref": "paper",
                         "yref": "paper",
                         "showarrow": False,
@@ -341,7 +354,7 @@ def business_graph2(Business_Sector, Business_Company, Business_Indicator):
             yaxis = { "visible": False },
             annotations = [
                 {   
-                    "text": "Please select an Indicator where Monthly data is available",
+                    "text": "Please select the relevant Timeline",
                     "xref": "paper",
                     "yref": "paper",
                     "showarrow": False,
@@ -389,6 +402,8 @@ def business_graph2(Business_Sector, Business_Company, Business_Indicator):
     'x':0.5,'xanchor':'center', 'yanchor':'top'}, xaxis_title="Source: " + str(np.unique(MonthlyData['Source'])[0]), yaxis_title=" Unit of Measurement: " + str(np.unique(MonthlyData['Unit'])[0]))
     return figure
 
+
+#-----------------Industry Dashboard------------------------###
 
 
 

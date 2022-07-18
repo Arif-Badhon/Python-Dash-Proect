@@ -85,6 +85,24 @@ app.layout= html.Div([
 def update_yearly_Economic_graph(Economic_Indicator):
     data = economic_collection[economic_collection['Indicator'] == Economic_Indicator]
     CalenderYearData = data[~data['Calendar Value'].isnull()]
+    if CalenderYearData.empty:
+        fig = go.Figure()
+        fig.update_layout(
+            xaxis =  { "visible": False },
+            yaxis = { "visible": False },
+            annotations = [
+                {   
+                    "text": "Please select an Indicator where yearly data is available",
+                    "xref": "paper",
+                    "yref": "paper",
+                    "showarrow": False,
+                    "font": {
+                        "size": 17
+                    }
+                }
+            ]
+        )
+        return fig
     cdata = CalenderYearData[['Calendar Year', 'Calendar Value']]
     cdata = cdata.sort_values('Calendar Year')
     cdata['Calendar Year'] = cdata['Calendar Year'].map(int).map(str)
@@ -93,7 +111,6 @@ def update_yearly_Economic_graph(Economic_Indicator):
             'x':0.5,'xanchor':'center', 'yanchor':'top'}, xaxis_title="Source: " + str(np.unique(CalenderYearData['Source'])[0]), yaxis_title="Unit of Measurement: " + str(np.unique(CalenderYearData['Unit'])[0]))
     for data in figure.data:
         data["width"] = 0.5
-
     return figure
 
 @app.callback(
@@ -102,6 +119,24 @@ def update_yearly_Economic_graph(Economic_Indicator):
 def update_budget_yearly_graph(Economic_Indicator):
     data = economic_collection[economic_collection['Indicator'] == Economic_Indicator]
     BudgetYearData = data[~data['Budget Value'].isnull()]
+    if BudgetYearData.empty:
+        fig = go.Figure()
+        fig.update_layout(
+            xaxis =  { "visible": False },
+            yaxis = { "visible": False },
+            annotations = [
+                {   
+                    "text": "Please select an Indicator where Budget Yearly data is available",
+                    "xref": "paper",
+                    "yref": "paper",
+                    "showarrow": False,
+                    "font": {
+                        "size": 17
+                    }
+                }
+            ]
+        )
+        return fig   
     cdata = BudgetYearData[['Budget Year', 'Budget Value']]
     cdata = cdata.sort_values('Budget Year')
     figure = px.bar(cdata, x='Budget Year', y='Budget Value', text="Budget Value")
@@ -117,7 +152,24 @@ def update_budget_yearly_graph(Economic_Indicator):
 def update_monthly_graph(Economic_Indicator):
     data = economic_collection[economic_collection['Indicator'] == Economic_Indicator]
     MonthlyData = data[~data['Calendar Year'].isnull() & data['Calendar Value'].isnull()]
-
+    if MonthlyData.empty:
+        fig = go.Figure()
+        fig.update_layout(
+            xaxis =  { "visible": False },
+            yaxis = { "visible": False },
+            annotations = [
+                {   
+                    "text": "Please select an Indicator where Monthly data is available",
+                    "xref": "paper",
+                    "yref": "paper",
+                    "showarrow": False,
+                    "font": {
+                        "size": 17
+                    }
+                }
+            ]
+        )
+        return fig
     cdata = MonthlyData[["Calendar Year", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]]
     cdata = cdata.sort_values('Calendar Year')
     cdata['Calendar Year'] = cdata['Calendar Year'].map(int).map(str)

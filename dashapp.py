@@ -62,9 +62,25 @@ app.layout= html.Div([
      html.Br(),
      html.Div([
         html.Div([
-            html.H3("  Business Dashboard", style={'font-size': 25, 'textAlign': 'left'}, className="five columns"),
-            dcc.Graph(id="Business Graph", className="seven columns")
+            html.Div([
+                html.H3("Business Dashboard", style={'font-size': 25, 'textAlign': 'left'}),
+                html.H5("Please select all to get the graph"),
+                html.H6("Select Sector"),
+                dcc.Dropdown(id="Business_Sector", options=[{'label':i, "value":i} for i in business_sector], value='Select'),
+                html.H6("Select Company"),
+                dcc.Dropdown(id="Business_Company"),
+                html.H6("Select Indicator"),
+                dcc.Dropdown(id="Business_Indicator")
+            ], className = "four columns"),
+            html.Div([
+                dcc.Tabs([
+                    dcc.Tab(label='Yearly', children=[dcc.Graph(id="Business_Graph", figure = {}, config={"displaylogo": False, 'modeBarButtonsToRemove':['toImage', 'pan2d', 'select2d', 'lasso2d']})]),
+                    dcc.Tab(label='Budget Yearly', children=[dcc.Graph(id="Business_Graph1", figure = {}, config={"displaylogo": False, 'modeBarButtonsToRemove':['toImage', 'pan2d', 'select2d', 'lasso2d']})]),
+                    dcc.Tab(label='Monthly', children=[dcc.Graph(id="Business_Graph2", figure = {}, config={"displaylogo": False, 'modeBarButtonsToRemove':['toImage', 'pan2d', 'select2d', 'lasso2d']})])
+                ])
+            ], className = "eight columns")
         ], className='row')
+      
      ]),
      html.Br(),
      html.Br(),
@@ -79,6 +95,7 @@ app.layout= html.Div([
 
 
 
+#-----------------Economic Dashboard Callback-----------------------------#
 @app.callback(
     Output('Economic_Graph', 'figure'),
     Input('Economic_Indicator', 'value'))
@@ -205,6 +222,174 @@ def update_monthly_graph(Economic_Indicator):
     figure.update_layout(title={'text':Economic_Indicator,  'y':0.93,
     'x':0.5,'xanchor':'center', 'yanchor':'top'}, xaxis_title="Source: " + str(np.unique(MonthlyData['Source'])[0]), yaxis_title="Unit of Measurement: " + str(np.unique(MonthlyData['Unit'])[0]))
     return figure
+
+#-------------- Business Dashboard callback----------------------#
+@app.callback(
+    Output('Business_Company', 'options'),
+    Input('Business_Sector', 'value')
+)
+def business_company(Business_Sector):
+    data = business_collection[business_collection['Sector'] == Business_Sector]
+    company = data["Company"]
+    return [{'label': i, 'value': i} for i in np.unique(company)]
+
+@app.callback(
+    Output('Business_Indicator', 'options'),
+    Input('Business_Sector', 'value'),
+    Input('Business_Company', 'value')
+)
+def business_indicator(Business_Sector, Business_Company):
+    data = business_collection[business_collection['Sector'] == Business_Sector]
+    data = data[data['Company'] == Business_Company]
+    Business_Indicator = data['Indicator']
+    return [{'label': i, 'value': i} for i in np.unique(Business_Indicator)]
+
+@app.callback(
+    Output('Business_Graph', 'figure'),
+    Input('Business_Sector', 'value'),
+    Input('Business_Company', 'value'),
+    Input('Business_Indicator', 'value')
+)
+def business_graph(Business_Sector, Business_Company, Business_Indicator):
+    data = business_collection[business_collection['Sector'] == Business_Sector]
+    data = data[data['Company'] == Business_Company]
+    data = data[data['Indicator'] == Business_Indicator]
+
+    CalenderYearData = data[~data['Calendar Value'].isnull()]
+    if CalenderYearData.empty:
+        fig = go.Figure()
+        fig.update_layout(
+            xaxis =  { "visible": False },
+            yaxis = { "visible": False },
+            annotations = [
+                {   
+                    "text": "Please select an Indicator where yearly data is available",
+                    "xref": "paper",
+                    "yref": "paper",
+                    "showarrow": False,
+                    "font": {
+                        "size": 17
+                    }
+                }
+            ]
+        )
+        return fig
+    cdata = CalenderYearData[['Year', 'Calendar Value']]
+    cdata = cdata.sort_values('Year')
+    cdata['Year'] = cdata['Year'].map(int).map(str)
+    figure = px.bar(cdata, x='Year', y='Calendar Value', text="Calendar Value")
+    figure.update_layout(title={'text':Business_Indicator + " by " + Business_Company,  'y':.93,
+        'x':0.5,'xanchor':'center', 'yanchor':'top'}, xaxis_title="Source: " + str(np.unique(CalenderYearData['Source'])[0]), yaxis_title="Unit of Measurement: " + str(np.unique(CalenderYearData['Unit'])[0]))
+    for data in figure.data:
+        data["width"] = 0.5
+    return figure
+
+@app.callback(
+    Output('Business_Graph1', 'figure'),
+    Input('Business_Sector', 'value'),
+    Input('Business_Company', 'value'),
+    Input('Business_Indicator', 'value')
+)
+def business_graph1(Business_Sector, Business_Company, Business_Indicator):
+        data = business_collection[business_collection['Sector'] == Business_Sector]
+        data = data[data['Company'] == Business_Company]
+        data = data[data['Indicator'] == Business_Indicator]
+
+        BudgetYearData = data[~data['Budget Value'].isnull()]
+        if BudgetYearData.empty:
+            fig = go.Figure()
+            fig.update_layout(
+                xaxis =  { "visible": False },
+                yaxis = { "visible": False },
+                annotations = [
+                    {   
+                        "text": "Please select an Indicator where Budget Yearly data is available",
+                        "xref": "paper",
+                        "yref": "paper",
+                        "showarrow": False,
+                        "font": {
+                            "size": 17
+                        }
+                    }
+                ]
+            )
+            return fig 
+        cdata = BudgetYearData[['Budget Year', 'Budget Value']]
+        cdata = cdata.sort_values('Budget Year')
+        figure = px.bar(cdata, x='Budget Year', y='Budget Value', text="Budget Value")
+        figure.update_layout(title={'text':Business_Indicator + " by " + Business_Company,  'y':.93,
+        'x':0.5,'xanchor':'center', 'yanchor':'top'}, xaxis_title="Source: " + str(np.unique(BudgetYearData['Source'])[0]), yaxis_title="Unit of Measurement: " + str(np.unique(BudgetYearData['Unit'])[0]))
+        for data in figure.data:
+            data["width"] = 0.5
+        return figure
+
+@app.callback(
+    Output('Business_Graph2', 'figure'),
+    Input('Business_Sector', 'value'),
+    Input('Business_Company', 'value'),
+    Input('Business_Indicator', 'value')
+)
+def business_graph2(Business_Sector, Business_Company, Business_Indicator):
+    data = business_collection[business_collection['Sector'] == Business_Sector]
+    data = data[data['Company'] == Business_Company]
+    data = data[data['Indicator'] == Business_Indicator]
+    MonthlyData = data[~data['Year'].isnull() & data['Calendar Value'].isnull()]
+    if MonthlyData.empty:
+        fig = go.Figure()
+        fig.update_layout(
+            xaxis =  { "visible": False },
+            yaxis = { "visible": False },
+            annotations = [
+                {   
+                    "text": "Please select an Indicator where Monthly data is available",
+                    "xref": "paper",
+                    "yref": "paper",
+                    "showarrow": False,
+                    "font": {
+                        "size": 17
+                    }
+                }
+            ]
+        )
+        return fig
+    
+    cdata = MonthlyData[["Year", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]]
+    cdata = cdata.sort_values('Year')
+    cdata['Year'] = cdata['Year'].map(int).map(str)
+    Year = cdata["Year"]
+    January = cdata["Jan"]
+    February = cdata["Feb"]
+    March = cdata["Mar"]
+    April = cdata["Apr"]
+    May = cdata["May"]
+    June = cdata["Jun"]
+    July = cdata["Jul"]
+    August = cdata["Aug"]
+    September = cdata["Sep"]
+    October = cdata["Oct"]
+    November = cdata["Nov"]
+    December = cdata["Dec"]
+
+    figure = go.Figure(data=[
+        go.Bar(name='January', x=Year, y=January),
+        go.Bar(name='February', x=Year, y=February),
+        go.Bar(name='March', x=Year, y=March),
+        go.Bar(name='April', x=Year, y=April),
+        go.Bar(name='May', x=Year, y=May),
+        go.Bar(name='June', x=Year, y=June),
+        go.Bar(name='July', x=Year, y=July),
+        go.Bar(name='August', x=Year, y=August),
+        go.Bar(name='September', x=Year, y=September),
+        go.Bar(name='October', x=Year, y=October),
+        go.Bar(name='November', x=Year, y=November),
+        go.Bar(name='December', x=Year, y=December)
+    ])
+    figure.update_layout(barmode='group')
+    figure.update_layout(title={'text':Business_Indicator + " by " + Business_Company,  'y':0.93,
+    'x':0.5,'xanchor':'center', 'yanchor':'top'}, xaxis_title="Source: " + str(np.unique(MonthlyData['Source'])[0]), yaxis_title=" Unit of Measurement: " + str(np.unique(MonthlyData['Unit'])[0]))
+    return figure
+
+
 
 
 

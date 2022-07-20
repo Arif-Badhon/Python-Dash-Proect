@@ -44,9 +44,10 @@ app.layout= html.Div([
         html.Div([
             html.Div([
                 html.H3("  Economic Dashboard", style={'font-size': 25, 'textAlign': 'left'}),
-                html.H5("  Here you can select any Indicator to see the analysis"),
+                # html.H5("  Here you can select any Indicator to see the analysis"),
+                # html.Br(),
                 html.Br(),
-                html.Br(),
+                html.H6("Select Indicator"),
                 dcc.Dropdown(id='Economic_Indicator', options=[{'label':i, 'value': i} for i in economic_indicator], value='Select')
             ], className = "four columns"),
             html.Div([
@@ -64,7 +65,8 @@ app.layout= html.Div([
         html.Div([
             html.Div([
                 html.H3("Business Dashboard", style={'font-size': 25, 'textAlign': 'left'}),
-                html.H5("Please select all to get the graph"),
+                # html.H5("Please select all to get the graph"),
+                html.Br(),
                 html.H6("Select Sector"),
                 dcc.Dropdown(id="Business_Sector", options=[{'label':i, "value":i} for i in business_sector], value='Select'),
                 html.H6("Select Company"),
@@ -88,7 +90,8 @@ app.layout= html.Div([
         html.Div([
             html.Div([
                 html.H3("Industry Dashboard", style={'font-size': 25, 'textAlign': 'left'}),
-                html.H5("Please Select all to get the graph"),
+                # html.H5("Please Select all to get the graph"),
+                html.Br(),
                 html.H5("Select Sector"),
                 dcc.Dropdown(id="Industry_Sector", options=[{'label': i, 'value': i} for i in industry_name], value='Select'),
                 html.H5("Select Indicator"),

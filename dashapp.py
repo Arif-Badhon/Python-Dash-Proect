@@ -1,5 +1,5 @@
 from dash import dash, dcc, html
-from database import user_collection, economic_collection, \
+from database import economic_collection, \
     business_collection, industry_collection
 from dash.dependencies import Input, Output, State
 import plotly.express as px
@@ -24,19 +24,15 @@ app = dash.Dash(__name__, title="Data Terminal", meta_tags=[{"name": "viewport",
 
 app.layout= html.Div([
      html.Div([
-        html.Img(src=app.get_asset_url('logo.jpeg'), style={'height':'15%', 'width':'15%'}, \
-            className="three columns"),
-        html.H4("BIZDATA DATA TERMINAL", style={'textAlign':'center'}, className="five columns"),
-        html.Div([html.H4("Bangladesh's First Data Portal \
-            for Economic, Business & Company Data", style={'textAlign':'right', 'font-size': 15}, \
-                className="four columns")])
+        html.Img(src=app.get_asset_url('logo.png'), style={'height':'15%', 'width':'15%', 'float': 'left'}, \
+            className="five columns"),
+        html.H4("DATA TERMINAL", style={'textAlign':'right', 'float':'right'}, className="seven columns")
      ], className='row'),
-     html.Br(),
-     html.Br(),
+    #  html.Br(),
+    #  html.Br(),
      html.Div([
-        html.P("Our Data Terminal is consists of 3 Dashboards which are: \
-            Economic Dashboard, Business Dashboard & Industry Dashboard \
-            You will get one of the most comprehensive data warehouse here", style={'font-size': 25, 'textAlign':'center'})
+        html.H4("Bangladesh's First Data Portal \
+            for Economic, Business & Company Data", style={'textAlign':'center', 'font-size': 25})
      ]),
      html.Br(),
      html.Br(),

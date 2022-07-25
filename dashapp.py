@@ -456,31 +456,29 @@ def industry_graph(Industry_Sector, Industry_Indicator):
     Input('Industry_Sector', 'value'),
     Input('Industry_Indicator', 'value')
 )
-def industry_graph1(Industry_Indicator, Industry_Sector):
+def industry_graph1(Industry_Sector, Industry_Indicator):
     data = industry_collection[industry_collection['Sector'] == Industry_Sector]
     data = data[data['Indicator'] == Industry_Indicator]
 
     BudgetYearData = data[~data['Budget Value'].isnull()]
     if BudgetYearData.empty:
-            fig = go.Figure()
-            fig.update_layout(
-                xaxis =  { "visible": False },
-                yaxis = { "visible": False },
-                annotations = [
-                    {   
-                        "text": "Please select the relevant Timeline",
-                        "xref": "paper",
-                        "yref": "paper",
-                        "showarrow": False,
-                        "font": {
-                            "size": 17
-                        }
+        fig = go.Figure()
+        fig.update_layout(
+            xaxis =  { "visible": False },
+            yaxis = { "visible": False },
+            annotations = [
+                {   
+                    "text": "Please select the relevant Timeline",
+                    "xref": "paper",
+                    "yref": "paper",
+                    "showarrow": False,
+                    "font": {
+                        "size": 17
                     }
-                ]
-            )
-            return fig
-
-
+                }
+            ]
+        )
+        return fig
     cdata = BudgetYearData[['Budget Year', 'Budget Value']]
     cdata = cdata.sort_values('Budget Year')
     figure = px.bar(cdata, x='Budget Year', y='Budget Value', text='Budget Value')
